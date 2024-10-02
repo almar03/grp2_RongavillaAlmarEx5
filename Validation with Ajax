@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation with AJAX</title>
+    <link rel="stylesheet" href="validations.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#VALIDATTION").on("submit", function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                
+                let formData = {
+                    username: $("input[name='username']").val(),
+                    email: $("input[name='email']").val(),
+                    password: $("input[name='password']").val(),
+                    gender: $("select[name='gender']").val()
+                };
+
+                
+                if (!formData.username || !formData.email || !formData.password) {
+                    $("#message").html("<p style='color: red;'>All fields are required!</p>");
+                    return;
+                }
+
+                // AJAX request
+                $.ajax({
+                    url: "validation.php", 
+                    type: "POST",
+                    data: formData,
+                    success: function(response) {
+                        
+                        $("#message").html("<p style='color: green;'>" + response + "</p>");
+                    },
+                    error: function() {
+                        $("#message").html("<p style='color: red;'>An error occurred. Please try again.</p>");
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <form id="VALIDATTION" action="validation.php" method="POST">
+        <label id="validate">FORM VALIDATION</label>
+        <br>
+        <input type="text" name="username" placeholder="Username" required>
+        <br>
+        <input type="email" name="email" placeholder="E-Mail" required>
+        <br>
+        <input type="password" name="password" placeholder="Password" required>
+        <br> 
+        <select name="gender" id="Gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Trans-gender">Trans-gender</option>
+            <option value="Binary">Binary</option>
+            <option value="Di mo pa alam?">Di mo pa alam?</option>
+        </select>
+        <br> 
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="message"></div>
+</body>
+</html>
